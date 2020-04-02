@@ -1,4 +1,5 @@
-﻿## Monitoring - Logging - Tracing 
+
+## Monitoring - Logging - Tracing 
 
 ### Logging :
 
@@ -16,7 +17,7 @@ Logging cung cấp cái nhìn sâu sắc có giá trị cùng với bối cảnh
 ### Monitoring :
 
 Việc giám sát thu thập, tổng hợp và phân tích các số liệu đưa ra các cảnh báo cho các nhà phát triển khi một hệ thống không hoạt động như bình thường.  
-Matric là một biểu diễn số của dữ liệu được đo theo các khoảng thời gian. Các số liệu có thể khai thác sức mạnh của mô hình toán học và dự đoán để rút ra hiểu biết về hành vi của một hệ thống trong các khoảng thời gian trong hiện tại và tương lai.
+Metric là một biểu diễn số của dữ liệu được đo theo các khoảng thời gian. Các số liệu có thể khai thác sức mạnh của mô hình toán học và dự đoán để rút ra hiểu biết về hành vi của một hệ thống trong các khoảng thời gian trong hiện tại và tương lai.
 
 ## Prometheus 
 
@@ -24,16 +25,13 @@ Matric là một biểu diễn số của dữ liệu được đo theo các kho
 
 Prometheus là bộ công cụ giám sát và cảnh báo hệ thống nguồn mở ,ban đầu được xây dựng tại SoundCloud. Kể từ khi thành lập vào năm 2012, nhiều công ty và tổ chức đã áp dụng Prometheus và dự án có một cộng đồng người dùng và nhà phát triển rất tích cực. 
 
-Bây giờ nó là một dự án nguồn mở độc lập và được duy trì độc lập với bất kỳ công ty nào. Prometheus đã tham gia Cloud Native Computing Foundation vào năm 2016 với tư cách là dự án được lưu trữ thứ hai, sau Kubernetes.
+Bây giờ nó là một dự án nguồn mở độc lập và được duy trì độc lập với bất kỳ công ty nào. Prometheus đã tham gia Cloud Native Computing Foundation vào năm 2016 với tư cách là dự án thứ hai, sau Kubernetes.
 
 Prometheus có khả năng thu thâp thông số/số liệu (metric) từ các mục tiêu được cấu hình theo các khoảng thời gian nhất định , đánh giá các biểu thức quy tắc, hiện thị kết quả và có thể kích hoạt cảnh báo nếu một số điều kiện được thỏa mãn yêu cầu.
 
-( * Tổ chức điện toán đám mây (CNCF) lưu trữ các thành phần quan trọng của cơ sở hạ tầng công nghệ toàn cầu. CNCF tập hợp các nhà phát triển, người dùng cuối và nhà cung cấp hàng đầu thế giới và điều hành các hội nghị nhà phát triển nguồn mở lớn nhất.
-*Kubernetes là một công cụ điều phối container mã nguồn mở giúp tự động hóa triển khai, nhân rộng và quản lý các ứng dụng containerization. Dự án mã nguồn mở được lưu trữ  bởi CNCF. )
-
 ### Feature :
 
-- Mô hình dữ liệu đa chiều với dữ liệu chuỗi thời gian được xác định bởi  tên của matric và cặp khóa - giá trị (key -value).
+- Mô hình dữ liệu đa chiều với dữ liệu chuỗi thời gian được xác định bởi tên của metric và cặp key -value .
 - PromQL, một ngôn ngữ truy vấn linh hoạt .
 - Không phụ thuộc vào lưu trữ phân tán; các node máy chủ đơn là tự chủ.
 - Việc thu thập chuỗi thời gian xảy ra thông qua một mô hình kéo qua HTTP.
@@ -43,7 +41,7 @@ Prometheus có khả năng thu thâp thông số/số liệu (metric) từ các 
 
 ### Characteristics :
 
-- Prometheus 100% là mã nguồn mở . Git hub : https://github.com/prometheus/prometheus/ .
+- Prometheus 100% là mã nguồn mở (Github :https://github.com/prometheus/prometheus).
 - Phần lớn các core tính năng của Prometheus được biết bằng ngôn ngữ Go , một số còn lại được viết bằng Java , Python, Ruby .
 - Prometheus không phải dùng để lấy dữ liệu logs , thay vì vậy nó là dịch vụ giám sát , thu thập và xử lý dữ liệu dạng metric .
 - Prometheus sử dụng cơ chế pull dữ liệu từ remote là chính , chứ không sử dụng cơ chế đợi remote push dữ liệu lên ngoại trừ trường hợp sử dụng PushGateway .
