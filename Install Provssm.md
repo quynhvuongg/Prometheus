@@ -152,3 +152,95 @@ services:
 ```
 
 ![ ](https://github.com/quynhvuongg/Picture/blob/master/prometheus4.png?raw=true)
+
+**_Install CAdvisor_**
+
+Container Advisor phân tích và hiển thị dữ liệu hiệu suất và sử dụng tài nguyên từ các container đang chạy .
+
+```yml
+#docker-compose.yml
+version: '3.7'
+
+volumes:
+  prometheus_data: {}
+  grafana_data: {}
+
+services:
+
+  prometheus:
+    image: prom/prometheus:v2.12.0
+    volumes:  
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+      - ./rule_files:/etc/prometheus/rule_files
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    ports:
+      - "9090:9090"
+    depends_on:
+    - cadvisor
+
+  cadvisor:
+    image: google/cadvisor
+    ports:
+    - 8080:8080
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:rw
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+
+  node-exporter:
+    image: prom/node-exporter
+    ports:
+       - "9100:9100"
+
+  grafana:
+    image: grafana/grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=pass
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+```
+
+```yml
+#prometheus.yml
+global:  
+  scrape_interval:  15s
+  external_labels:
+      monitor:  'my-monitor'  
+
+scrape_configs:  
+  - job_name: 'prometheus'  
+
+    static_configs:
+         - targets: ['localhost:9090']
+
+  - job_name: 'node-exporter'
+
+    static_configs:
+         - targets: ['node-exporter:9100']
+
+  - job_name: cadvisor
+    scrape_interval: 5s
+    static_configs:
+    - targets:
+      - cadvisor:8080
+
+rule_files:  
+  - "rule_files"
+```
+
+docker-compose up
+
+![ ](https://github.com/quynhvuongg/Picture/blob/master/CAdvisor1.png?raw=true)
+
+![ ](https://github.com/quynhvuongg/Picture/blob/master/CAdvisor4.png?raw=true)
+
+Gafana
+
+![  ](https://github.com/quynhvuongg/Picture/blob/master/CAdvisor3.png?raw=true)

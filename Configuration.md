@@ -106,9 +106,9 @@ rule_files:
 
 Để kiểm tra thủ công cảnh báo nào đang hoạt động (pending or firing), chuyển đến tab "Alerts" trong Prometheus. Nó sẽ cho ta thấy các bộ nhãn chính xác mà mỗi cảnh báo được xác định hiện đang hoạt động.
 
-Đối với cảnh báo pending and firing, Prometheus cũng lưu trữ time series tổng hợp có dạng `ALERTS{alertname="<alert name>", alertstate="pending|firing", <additional alert labels>}`. Giá trị mẫu được đặt thành 1 miễn là cảnh báo ở trạng thái hoạt động (pending and firing) được chỉ định và chuỗi được đánh dấu cũ khi điều này không còn xảy ra nữa.
+Đối với cảnh báo pending and firing, Prometheus cũng lưu trữ time series tổng hợp có dạng: `ALERTS{alertname="<alert name>", alertstate="pending|firing", <additional alert labels>}`.
 
-![ ](https://coreos.com/sites/default/files/inline-images/prometheus-etcd-03.png)
+![ ](https://github.com/quynhvuongg/Picture/blob/master/Alert2.png?raw=true )
 
 *_Sending alert notifications_*
 
