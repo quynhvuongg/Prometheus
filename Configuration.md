@@ -95,6 +95,18 @@ rule_files:
 
 ![ ](https://github.com/quynhvuongg/Picture/blob/master/prometheus6.png?raw=true)
 
+*_Inspecting alerts during runtime_*
+
+Để kiểm tra thủ công cảnh báo nào đang hoạt động (pending or firing), chuyển đến tab "Alerts" trong Prometheus. Nó sẽ cho ta thấy các bộ nhãn chính xác mà mỗi cảnh báo được xác định hiện đang hoạt động.
+
+Đối với cảnh báo pending and firing, Prometheus cũng lưu trữ time series tổng hợp có dạng `ALERTS{alertname="<alert name>", alertstate="pending|firing", <additional alert labels>}`. Giá trị mẫu được đặt thành 1 miễn là cảnh báo ở trạng thái hoạt động (pending and firing) được chỉ định và chuỗi được đánh dấu cũ khi điều này không còn xảy ra nữa.
+
+![ ](https://coreos.com/sites/default/files/inline-images/prometheus-etcd-03.png)
+
+*_Sending alert notifications_*
+
+Các alert rules của Prometheus rất tốt trong việc tìm ra những gì bị hỏng thời điểm đó, nhưng chúng không phải là một giải pháp thông báo chính thức. Để thêm tóm tắt, giới hạn tốc độ thông báo, im lặng và cảnh báo phụ thuộc vào các định nghĩa cảnh báo đơn giản do Alertmanager đảm nhận vai trò này.
+
 ***Templates***
 
 Prometheus hỗ trợ tạo khuôn mẫu trong các annotations và labels của cảnh báo, cũng như trong các trang điều khiển được phục vụ.
