@@ -1,11 +1,11 @@
 ﻿# Configuration
 
-Prometheus được cấu hình thông qua command-line flags và configure file :
+Prometheus được cấu hình thông qua command-line flags và configure file:
 
 - command-line flags cấu hình các tham số hệ thống bất biến (như vị trí lưu trữ, lượng dữ liệu lưu trên disk và trong bộ nhớ, v.v.)
 - configure file viết bằng YAML xác định mọi thứ liên quan đến scraping jobs  and instances , rule files để load .
 
-Prometheus có thể reload cấu hình của nó khi chạy. Nếu cấu hình mới không được định dạng tốt, các thay đổi sẽ không được áp dụng. Reload cấu hình được kích hoạt bằng cách gửi `SIGHUP` tới Prometheus process hoặc gửi  HTTP POST request đến `/-/reload` endpoint (khi cờ `--web.enable-lifecycle`  được bật )... đồng thời cũng sẽ reload rule files được configure .
+Prometheus có thể reload cấu hình của nó khi chạy. Nếu cấu hình mới không được định dạng tốt, các thay đổi sẽ không được áp dụng. Reload cấu hình được kích hoạt bằng cách gửi `SIGHUP` tới Prometheus process hoặc gửi  HTTP POST request đến `/-/reload` endpoint, đồng thời cũng sẽ reload rule files được configure.
 
 Để chỉ định configure file nào được reload ta sử dụng cờ  `--config.file`
 
@@ -25,8 +25,8 @@ scrape_configs: #Một cấu hình scrape chứa chính xác endpoint để scra
 
 ```yml
  # docker-compose.yml
-  command: # chỉ định configure file vào đường dẫn chứa file configure
-       - "--config.file=/etc/prometheus/prometheus.yml"  
+  command:
+       - "--config.file=/etc/prometheus/prometheus.yml"  # chỉ định configure file vào đường dẫn
 ```
 
 ---
@@ -49,7 +49,7 @@ groups:
 
 ```
 
-Check rules sử dụng promtool : sudo apt install promtool :
+Check rules sử dụng promtool:
 
 ![ ](https://github.com/quynhvuongg/Picture/blob/master/prometheus5.png?raw=true)
   
