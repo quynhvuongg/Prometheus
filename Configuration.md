@@ -11,11 +11,14 @@ Prometheus có thể reload cấu hình của nó khi chạy. Nếu cấu hình 
 
 ```yml
 #prometheus.yml
-global:  
-  scrape_interval:  15s  # Set thời gian lấy metrics sau mỗi 15s (defaul = 1m)
-  external_labels: #Đính kèm labels này vào bất kỳ time series hoặc alert nào khi liên lạc với hệ thống bên ngoài (remote storage , Alertmanager )
+global:
+  # Set thời gian lấy metrics sau mỗi 15s (defaul = 1m)
+  scrape_interval:  15s
+  #Đính kèm labels này vào bất kỳ time series hoặc alert nào khi liên lạc với hệ thống bên ngoài (remote storage , Alertmanager )
+  external_labels:
     monitor:  'my-monitor'  
-scrape_configs: #Một cấu hình scrape chứa chính xác endpoint để scrape
+#Một cấu hình scrape chứa chính xác endpoint để scrape
+scrape_configs:  
   - job_name:  'prometheus'  
     static_configs:
          - targets: ['localhost:9090']
@@ -43,9 +46,12 @@ Truy vấn kết quả được tính toán trước thường sẽ nhanh hơn n
 #rule_files
 groups:
   - name: example # tên của group
-    rules: #Tên của time series mới để lưu kết quả
-    - record: node_memory_MemFree_percent  
-      expr: 100 - (100 * node_memory_MemFree_bytes / node_memory_MemTotal_bytes)  # biểu thức tính metric
+    rules:
+    #Tên của time series mới để lưu kết quả  
+    - record: node_memory_MemFree_percent
+      # biểu thức tính metric
+      expr: 100 - (100 * node_memory_MemFree_bytes / node_memory_MemTotal_bytes)
+
 
 ```
 
@@ -69,10 +75,11 @@ groups:
 - name: example
   rules:
 # Cảnh báo cho bất kì instance không tới được trong 2m
-  - alert: service_down # tên của alert
-    expr: up == 0 # biểu thức đánh giá
-    for: 2m # thời gian chờ xử lý trước khi kích hoạt cảnh báo
-    labels: #label được đính kèm cùng alert ,nhãn đã tồn tại nào xung đột sẽ bị ghi đè
+  - alert: service_down #tên của alert
+    expr: up == 0 #biểu thức đánh giá
+    for: 2m #thời gian chờ xử lý trước khi kích hoạt cảnh báo
+    #label được đính kèm cùng alert ,nhãn đã tồn tại nào xung đột sẽ bị ghi đè
+    labels:
       severity: page
     annotations:
       summary: "Instance {{ $labels.instance }} down"
