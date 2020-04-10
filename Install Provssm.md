@@ -15,12 +15,18 @@ Step 2: Viết file prometheus.yml để tùy chỉnh config (nếu cần )
 
 ```yml
 # prometheus.yml
-global:  
-  # Set thời gian lấy metrics sau mỗi 15s (defaul = 1m)
+global:
+
+# Set thời gian lấy metrics sau mỗi 15s (defaul = 1m)
   scrape_interval:  15s
-  #Đính kèm labels này vào bất kỳ time series hoặc alert nào khi liên lạc với hệ thống bên ngoài(remote storage , Alertmanager )
+
+#Đính kèm labels này vào bất kỳ time series
+#hoặc alert nào khi liên lạc với hệ thống
+#bên ngoài(remote storage, Alertmanager)
+
   external_labels:  
     monitor:  'my-monitor'  
+
 #Một cấu hình scrape chứa chính xác endpoint để scrape
 scrape_configs:  
   - job_name:  'prometheus'  
@@ -40,10 +46,12 @@ Step 3: Viết file docker-compose.yml cho docker compose:
   
    prometheus:  
      image: prom/prometheus:v2.12.0
+
      # mount prometheus.yml vào container
      volumes:  
        - ./prometheus.yml:/etc/prometheus/prometheus.yml
        - prometheus_data:/prometheus
+
     # chỉ định configure file vào đường dẫn
      command:
        - "--config.file=/etc/prometheus/prometheus.yml"  
@@ -153,9 +161,9 @@ services:
 
 ![ ](https://github.com/quynhvuongg/Picture/blob/master/prometheus4.png?raw=true)
 
-**_Install CAdvisor_**
+## Install CAdvisor
 
-Container Advisor phân tích và hiển thị dữ liệu hiệu suất và sử dụng tài nguyên từ các container đang chạy .
+Container Advisor phân tích và hiển thị dữ liệu hiệu suất và sử dụng tài nguyên từ các container đang chạy.
 
 ```yml
 #docker-compose.yml

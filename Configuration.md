@@ -12,31 +12,32 @@ Prometheus có thể reload cấu hình của nó khi chạy. Nếu cấu hình 
 ```yml
 #prometheus.yml
 global:
-  # Set thời gian lấy metrics sau mỗi 15s (defaul = 1m)
+  
+# Set thời gian lấy metrics sau mỗi 15s (defaul = 1m)
   scrape_interval:  15s
-  #Đính kèm labels này vào bất kỳ time series hoặc alert nào khi liên lạc với hệ thống bên ngoài (remote storage , Alertmanager )
   external_labels:
     monitor:  'my-monitor'  
+
 #Một cấu hình scrape chứa chính xác endpoint để scrape
 scrape_configs:  
   - job_name:  'prometheus'  
     static_configs:
          - targets: ['localhost:9090']
 
-  # metrics_path defaults to '/metrics'
 ```
 
 ```yml
  # docker-compose.yml
   command:
-       - "--config.file=/etc/prometheus/prometheus.yml"  # chỉ định configure file vào đường dẫn
+       - "--config.file=/etc/prometheus/prometheus.yml"  
+       # chỉ định configure file vào đường dẫn
 ```
 
 ---
 
 Prometheus hỗ trợ 2 kiểu rules : Recording rule và Alerting rule. Các statement được chứa trong tệp YAML `rule_files` và được Prometheus load  vào.
 
-*_Recording rules_*
+## Recording rules
 
 Cho phép ta tính toán trước các biểu thức cần thiết hoặc tính toán đắt tiền và lưu kết quả của chúng dưới dạng một time series mới.
 
@@ -47,8 +48,10 @@ Truy vấn kết quả được tính toán trước thường sẽ nhanh hơn n
 groups:
   - name: example # tên của group
     rules:
+
     #Tên của time series mới để lưu kết quả  
     - record: node_memory_MemFree_percent
+
       # biểu thức tính metric
       expr: 100 - (100 * node_memory_MemFree_bytes / node_memory_MemTotal_bytes)
 
@@ -65,7 +68,7 @@ rule_files:
 - "rule_files"
 ```
 
-*_Alerting rules_*
+## Alerting rules
 
 Cho phép ta xác định các điều kiện cảnh báo dựa trên biểu thức Prometheus và gửi thông báo kích hoạt cảnh báo tới dịch vụ bên ngoài.
 
@@ -74,17 +77,25 @@ Cho phép ta xác định các điều kiện cảnh báo dựa trên biểu th�
 groups:
 - name: example
   rules:
-# Cảnh báo cho bất kì instance không tới được trong 2m
-  - alert: service_down #tên của alert
-    expr: up == 0 #biểu thức đánh giá
-    for: 2m #thời gian chờ xử lý trước khi kích hoạt cảnh báo
-    #label được đính kèm cùng alert ,nhãn đã tồn tại nào xung đột sẽ bị ghi đè
+
+# Cảnh báo cho service nào không hoạt động
+  - alert: service_down  #tên của alert
+    expr: up == 0        #biểu thức đánh giá
+    for: 2m   #thời gian chờ trước khi kích hoạt cảnh báo
+
+    #label được đính kèm cùng alert ,
+    #nhãn đã tồn tại nào xung đột sẽ bị ghi đè
+
     labels:
       severity: page
+
     annotations:
       summary: "Instance {{ $labels.instance }} down"
       description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 2 minutes."
-#annotations chỉ định một bộ nhãn thông tin có thể được sử dụng để lưu trữ thông tin bổ sung dài hơn như mô tả cảnh báo hoặc liên kết runbook.
+
+#annotations chỉ định một bộ nhãn thông tin
+#có thể được sử dụng để lưu trữ thông tin bổ sung
+#dài hơn như mô tả cảnh báo hoặc liên kết runbook.
 ```
 
 ```yml
@@ -102,7 +113,7 @@ rule_files:
 
 ![ ](https://github.com/quynhvuongg/Picture/blob/master/prometheus6.png?raw=true)
 
-*_Inspecting alerts during runtime_*
+**_Inspecting alerts during runtime_**
 
 Để kiểm tra thủ công cảnh báo nào đang hoạt động (pending or firing), chuyển đến tab "Alerts" trong Prometheus. Nó sẽ cho ta thấy các bộ nhãn chính xác mà mỗi cảnh báo được xác định hiện đang hoạt động.
 
@@ -110,11 +121,11 @@ rule_files:
 
 ![ ](https://github.com/quynhvuongg/Picture/blob/master/Alert2.png?raw=true )
 
-*_Sending alert notifications_*
+**_Sending alert notifications_**
 
 Các alert rules của Prometheus rất tốt trong việc tìm ra những gì bị hỏng thời điểm đó, nhưng chúng không phải là một giải pháp thông báo chính thức. Để thêm tóm tắt, giới hạn tốc độ thông báo, im lặng và cảnh báo phụ thuộc vào các định nghĩa cảnh báo đơn giản do Alertmanager đảm nhận vai trò này.
 
-***Templates***
+## Templates
 
 Prometheus hỗ trợ tạo khuôn mẫu trong các annotations và labels của cảnh báo, cũng như trong các trang điều khiển được phục vụ.
 Templates có khả năng chạy các truy vấn đối với cơ sở dữ liệu cục bộ, lặp dữ liệu, sử dụng các điều kiện, định dạng dữ liệu, v.v.
