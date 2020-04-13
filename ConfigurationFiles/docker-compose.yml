@@ -1,0 +1,46 @@
+version: '3.7'
+
+volumes:
+  prometheus_data: {}
+  grafana_data: {}
+
+services: 
+ 
+  prometheus: 
+    image: prom/prometheus:v2.12.0
+    volumes:  
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+      - ./rule_files:/etc/prometheus/rule_files
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    ports:     
+      - "9090:9090"
+    depends_on:
+    - cadvisor
+    
+  cadvisor:
+    image: google/cadvisor
+    ports:
+    - 8080:8080
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:rw
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+   
+  node-exporter:
+    image: prom/node-exporter
+    ports:
+       - "9100:9100"
+
+  grafana:
+    image: grafana/grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=pass
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
