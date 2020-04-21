@@ -105,7 +105,7 @@ Cả hai giao thức đọc và ghi đều sử dụng mã hóa bộ đệm giao
 
 Khi cấu hình, Prometheus lưu trữ các truy vấn ( ví dụ qua HTTP API ) được gửi đến cả `local` và `remote storage` và  kết quả được đồng nhất.
 
-Lưu ý rằng để duy trì độ tin cậy khi đối mặt với các vấn đề lưu trữ từ xa,  việc đánh giá những quy tắc alert và record chỉ sử dụng TSDB cục bộ.
+Lưu ý rằng để duy trì độ tin cậy khi đối mặt với các vấn đề lưu trữ từ xa, việc đánh giá những quy tắc alert và record chỉ sử dụng TSDB cục bộ.
 
 **`<remote_read>`**
 
@@ -205,3 +205,21 @@ queue_config:
   [ max_backoff: <duration> | default = 100ms ]
   
 ```
+
+### Compare local and remote storage
+
+**_Local Storage_**
+
+* Dữ liệu được lưu theo định dạng TSDB trên disk(SSD/HDD)
+* Hỗ trợ WAL và lưu trữ khối dữ liệu trong 2 giờ
+* Không có khả năng mở rộng và độ bền kém
+* Được sử dụng cho việc đánh giá các quy tắc alert hoặc record
+* Không lưu trữ lâu dài
+
+**_Remote Storage_**
+
+* Dữ liệu được ghi thông qua các bộ điều hợp lưu trữ và Prometheus không kiểm soát định dạng lưu trữ dữ liệu,được tùy chỉnh
+* Dữ liệu được hợp nhất với lưu trữ cục bộ
+* Hỗ trợ relabeling và hạn chế số liệu ghi tối thiểu
+* Có khả năng mở rộng và lưu trữ lâu dài
+* Tất cả các đánh giá PromQL trên dữ liệu thô vẫn xảy ra trong chính Prometheus. Điều này có nghĩa là các truy vấn đọc từ xa có một số giới hạn về khả năng mở rộng, vì tất cả dữ liệu cần thiết cần được tải vào máy chủ Prometheus truy vấn trước rồi xử lý ở đó.
