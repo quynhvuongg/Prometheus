@@ -86,6 +86,7 @@ A Histogram looks like:
 
     A Summary looks like:
 
+    ```sh
     go_gc_duration_seconds{quantile="0"} 0.000236554
     go_gc_duration_seconds{quantile="0.25"} 0.000474629
     go_gc_duration_seconds{quantile="0.5"} 0.0005691670000000001
@@ -93,6 +94,7 @@ A Histogram looks like:
     go_gc_duration_seconds{quantile="1"} 0.002479919
     go_gc_duration_seconds_sum 12.532527861
     go_gc_duration_seconds_count 24279
+    ```
 
     Một số khác biệt giữa Summary và Historgram:
 
@@ -111,7 +113,7 @@ _Ví dụ:_
   - instance 1:  `1.2.3.4:5670`
   - instance 2:  `1.2.3.4:5671`
   - instance 3:  `5.6.7.8:5670`
-- instance 4:  `5.6.7.8:5671`
+  - instance 4:  `5.6.7.8:5671`
 
 # Architecture
 
@@ -126,7 +128,7 @@ Prometheus là một hệ sinh thái gồm nhiều thành phần:
 - Alertmanager : xử lý cảnh báo.
 - Các công cụ hỗ trợ khác .
 
--> Prometheus thực hiện lấy các metric từ các job được chỉ định qua kênh trực tiếp hoặc thông qua dịch vụ Gateway chung . Sau đó Promethus sẽ lưu trữ các dữ liệu thu thấp được ở local máy chủ . Tiếp đến sẽ chạy các rules để xử lý dữ liệu theo nhu cầu cũng như kiểm tra thực hiện các cảnh báo mà bạn mong muốn .
+-> Prometheus thực hiện lấy các metric từ các job được chỉ định qua kênh trực tiếp hoặc thông qua dịch vụ Gateway chung . Sau đó Promethus sẽ lưu trữ các dữ liệu thu thấp được ở local máy chủ. Tiếp đến sẽ chạy các rules để xử lý dữ liệu theo nhu cầu cũng như kiểm tra thực hiện các cảnh báo mà bạn mong muốn .
 
 ## When does it fit
 
