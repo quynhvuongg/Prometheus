@@ -186,7 +186,8 @@ Ngoài ra, Relabeling còn được sử dụng trong cấu hình cảnh báo, �
 
 ```sh
 alerting:
-  alert_relabel_config:- source_labels: [time_window]
-    regex: never
-    action: drop
+  alert_relabel_config:
+    - source_labels: [time_window]
+      regex: never
+      action: drop
 ```
