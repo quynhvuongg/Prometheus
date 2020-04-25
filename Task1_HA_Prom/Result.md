@@ -1,3 +1,10 @@
+
+
+**Task 1**
+
+- Dựng Prom cluster 2 node và Alertmanager cluster 2 node bằng docker compose.
+- kịch bản test: stop bất kì 1 node Prom và 1 node Alertmanager , Prom vẫn đảm bảo chạy bình thường , đồng thời có cảnh báo service down
+
 **Alertmanager Cluster Status**
 
 
