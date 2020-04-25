@@ -1,0 +1,64 @@
+version: '3.7'
+
+volumes:
+  prometheus_data: {}
+
+services: 
+ 
+  prometheus1: 
+    image: prom/prometheus
+    container_name: prometheus1
+    volumes:  
+      - ./prometheus1.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus1
+      - ./rule_files:/etc/prometheus/rule_files
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.listen-address=prometheus1:9090"
+    ports:     
+      - 9090:9090
+
+  prometheus2: 
+    image: prom/prometheus
+    container_name: prometheus2
+    volumes:  
+      - ./prometheus2.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus2
+      - ./rule_files:/etc/prometheus/rule_files
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.listen-address=prometheus2:9091"
+    ports:     
+      - 9091:9091
+    
+  alertmanager1:
+    image: prom/alertmanager
+    container_name: alertmanager1
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--web.listen-address=alertmanager1:9093"
+      - "--cluster.listen-address=0.0.0.0:9094"
+      - "--cluster.peer=alertmanager2:9094"
+      - "--log.level=debug"
+    ports:
+      - 9093:9093
+ 
+  alertmanager2:
+    image: prom/alertmanager
+    container_name: alertmanager2
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--web.listen-address=alertmanager2:9095"
+      - "--cluster.listen-address=0.0.0.0:9094"
+      - "--cluster.peer=alertmanager1:9094"
+      - "--log.level=debug"
+
+    ports:
+      - 9095:9095
+ 
+   
+   
