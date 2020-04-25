@@ -1,6 +1,6 @@
 **Task 2**
 
-Federation: Dựng 2 node Prom X và Y. Prom X cấu hình targer giám sát host dùng node_exporter. Prom Y sử dụng federation để collect chỉ các metric về CPU từ Prom A.
+Federation: Dựng 2 node Prom X và Y. Prom X cấu hình targer giám sát host dùng node_exporter. Prom Y sử dụng federation để collect chỉ các metric về CPU từ Prom X.
 
 * Targets trên 2 Prometheus:
 
