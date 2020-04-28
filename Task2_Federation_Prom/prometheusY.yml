@@ -15,9 +15,10 @@ scrape_configs:
 
         params:
           match[]:
-            - '{job="node-exporter"}'
+            # - '{job="node-exporter"}'
+            - '{__name__=~"node_cpu.*"}'
 
         static_configs:
              - targets:
                 - 'prometheusX:9090'
-
+        
