@@ -4,7 +4,7 @@
 **_Data Model_**
 
 Prometheus về cơ bản lưu trữ tất cả dữ liệu theo time series.
-Time series là sự kết hợp của name metric và các cặp key-value được gọi là labels. Kết hợp của các lables cho cùng một name metric khởi tạo nên một dimention cụ thể cho metric đó . Label bắt đầu bằng _ được dành riêng cho sử dụng nội bộ.
+Time series là sự kết hợp của name metric và các cặp key-value được gọi là labels. Kết hợp của các lables cho cùng một name metric khởi tạo nên một dimension cụ thể cho metric đó . Label bắt đầu bằng _ được dành riêng cho sử dụng nội bộ.
 
 ![ ](https://image.slidesharecdn.com/copyofprometheusstorage1-160127133731/95/prometheus-storage-4-638.jpg?cb=1453901940)
 
@@ -19,7 +19,7 @@ Time series là sự kết hợp của name metric và các cặp key-value đư
 Các samples hình thành lên time series thực tế ,mỗi sample bao gồm :
 
 - một  giá trị float64
-- một timestamp chính xác đến mili giây.
+- một timestamp chính xác đến mili giây.(1/1/1970 UTC)
 
 *_Notation_*
 
