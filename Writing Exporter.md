@@ -63,16 +63,6 @@ Vd: - Machine metrics (ví dụ: CPU,Filesystem,memory disk,...) đã được c
     - Tốc độ trung bình kể từ khi bắt đầu ứng dụng, mức tối thiểu, tối đa và độ lệch chuẩn vì Prometheus hoàn toàn có thể tính toán được chúng.
     - ...
 
-## Failed scrapes
-
-Hiện tại có hai mẫu cho `failed scrapes` trong đó ứng dụng mà bạn đang nói chuyện không có phản hồi hoặc có vấn đề khác.
-
-* Đầu tiên là trả về lỗi 5xx.
-
-* Thứ hai là có myexporter_up, ví dụ: haproxy_up, biến có giá trị 0 hoặc 1 tùy thuộc vào việc scrape có hoạt động hay không.
-
-Thứ hai tốt hơn khi có vẫn còn một số metrics hữu ích mà bạn có thể nhận được ngay cả với một lần cạo không thành công, chẳng hạn như HAProxy-exporter cung cấp metric thống kê quy trình. Trước đây người dùng dễ dàng xử lý hơn, vì `up` hoạt động theo cách thông thường, mặc dù bạn có thể phân biệt giữa Exporter bị ngừng hoạt động và ứng dụng bị ngừng hoạt động.
-
 ## Configuration
 
 * Khi làm việc với các ứng dụng, bạn nên nhắm đến một exporter không yêu cầu cấu hình tùy chỉnh của người dùng ngoài việc cho biết ứng dụng đó ở đâu.
@@ -86,6 +76,16 @@ Thứ hai tốt hơn khi có vẫn còn một số metrics hữu ích mà bạn 
 * Khuyến nghị đảm bảo exporter hoạt động ngoài box mà không cần cấu hình và cung cấp lựa chọn các cấu hình ví dụ để chuyển đổi nếu cần.
 
 * YAML là định dạng cấu hình Prometheus tiêu chuẩn, tất cả các cấu hình nên sử dụng YAML theo mặc định.
+
+## Failed scrapes
+
+Hiện tại có hai mẫu cho `failed scrapes` trong đó ứng dụng mà bạn đang nói chuyện không có phản hồi hoặc có vấn đề khác.
+
+* Đầu tiên là trả về lỗi 5xx.
+
+* Thứ hai là có myexporter_up, ví dụ: haproxy_up, biến có giá trị 0 hoặc 1 tùy thuộc vào việc scrape có hoạt động hay không.
+
+Thứ hai tốt hơn khi có vẫn còn một số metrics hữu ích mà bạn có thể nhận được ngay cả với một lần cạo không thành công, chẳng hạn như HAProxy-exporter cung cấp metric thống kê quy trình. Trước đây người dùng dễ dàng xử lý hơn, vì `up` hoạt động theo cách thông thường, mặc dù bạn có thể phân biệt giữa Exporter bị ngừng hoạt động và ứng dụng bị ngừng hoạt động.
 
 ## Other tips
 
