@@ -210,16 +210,17 @@ queue_config:
 
 **_Local Storage_**
 
-* Dữ liệu được lưu theo định dạng TSDB trên disk(SSD/HDD)
-* Hỗ trợ WAL và lưu trữ khối dữ liệu trong 2 giờ
+* Dữ liệu được lưu theo định dạng TSDB trên disk (SSD/HDD)
 * Không có khả năng mở rộng và độ bền kém
-* Được sử dụng cho việc đánh giá các quy tắc alert hoặc record
-* Không lưu trữ lâu dài
+* Không lưu trữ lâu dài (mặc định 15d)
+* Không có tính sẵn sàng cao
+* Độ khả dụng phụ thuộc và disk
+* Có thể sử dụng PromQL để truy vấn và đánh giá các rule đối với dữ liệu trên local
 
 **_Remote Storage_**
 
 * Dữ liệu được ghi thông qua các bộ điều hợp lưu trữ và Prometheus không kiểm soát định dạng lưu trữ dữ liệu,được tùy chỉnh
-* Dữ liệu được hợp nhất với lưu trữ cục bộ
-* Hỗ trợ relabeling và hạn chế số liệu ghi tối thiểu
-* Có khả năng mở rộng và lưu trữ lâu dài
+* Có khả năng mở rộng linh hoạt và lưu trữ lâu dài
+* Độ khả dụng lớn
+* Chỉ có thể sử dụng Prometheus để truy vấn , không được sử dụng dữ liệu trên lưu trữ remote để đánh giá các rule
 * Tất cả các đánh giá PromQL trên dữ liệu thô vẫn xảy ra trong chính Prometheus. Điều này có nghĩa là các truy vấn đọc từ xa có một số giới hạn về khả năng mở rộng, vì tất cả dữ liệu cần thiết cần được tải vào máy chủ Prometheus truy vấn trước rồi xử lý ở đó.
