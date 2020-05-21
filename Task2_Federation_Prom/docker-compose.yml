@@ -1,0 +1,38 @@
+version: '3.7'
+
+volumes:
+  prometheus_data: {}
+
+services: 
+ 
+  prometheusX: 
+    image: prom/prometheus
+    container_name: prometheusX
+    volumes:  
+      - ./prometheusX.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus1
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.listen-address=prometheusX:9090"
+    ports:     
+      - 9090:9090
+
+  prometheusY: 
+    image: prom/prometheus
+    container_name: prometheusY
+    volumes:  
+      - ./prometheusY.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.listen-address=prometheusY:9091"
+    ports:     
+      - 9091:9091
+    
+  node-exporter:
+    image: prom/node-exporter
+    container_name: node-exporter
+    ports:
+      - 9100:9100
+   
+   
