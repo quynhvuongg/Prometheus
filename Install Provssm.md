@@ -1,4 +1,13 @@
-﻿# Install
+﻿# [Install](https://prometheus.io/docs/prometheus/latest/installation/)
+<!-- TOC -->
+
+- [Install](#install)
+  - [Install Prometheus with Docker](#install-prometheus-with-docker)
+  - [Install node-exporter](#install-node-exporter)
+  - [Install Grafana](#install-grafana)
+  - [Install CAdvisor](#install-cadvisor)
+
+<!-- /TOC -->
 
 Prometheus hỗ trợ 3 hình thức cài đặt các thành phần hệ thống gồm : Docker Image, cài đặt từ source với Go và file chương trình chạy sẵn đã được biên dịch sẵn.
 

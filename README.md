@@ -1,7 +1,7 @@
 # Prometheus
 
 1. [Overview](Prometheus.md)
-2. [Concepts and Architecture](Concepts.md)
+2. [Concepts](Concepts.md)
 3. [PromQL](PromQL.md)
 4. [Install Prometheus with exporters](Install%20Provssm.md)
 5. [Configuration](Configuration.md)

@@ -1,4 +1,15 @@
 ﻿# Storage
+<!-- TOC -->
+
+- [Storage](#storage)
+  - [Local storage](#local-storage)
+    - [On-disk layout](#on-disk-layout)
+    - [Compaction](#compaction)
+    - [Operational aspects (Sizing calculation)](#operational-aspects-sizing-calculation)
+    - [Remote storage](#remote-storage)
+    - [Compare local and remote storage](#compare-local-and-remote-storage)
+
+<!-- /TOC -->
 
 Prometheus bao gồm cơ sở dữ liệu time series được lưu trữ trên local disk, nhưng cũng tùy ý tích hợp với các hệ thống lưu trữ từ xa.
 

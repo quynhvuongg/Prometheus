@@ -1,4 +1,16 @@
 ﻿# Labels
+<!-- TOC -->
+
+- [Labels](#labels)
+  - [What are labels](#what-are-labels)
+  - [What are labels used for](#what-are-labels-used-for)
+  - [Instrumentation & Target labels](#instrumentation--target-labels)
+  - [Relabeling](#relabeling)
+    - [`<relabel_config>`](#relabel_config)
+    - [`<metric_relabel_configs>`](#metric_relabel_configs)
+    - [`<alert_relabel_configs>`](#alert_relabel_configs)
+
+<!-- /TOC -->
 
 ## What are labels
 

@@ -1,4 +1,14 @@
-﻿#
+﻿# Prometheus HA 
+<!-- TOC -->
+
+- [Prometheus HA](#prometheus-ha)
+  - [Prometheus High-availability](#prometheus-high-availability)
+  - [Prometheus federation](#prometheus-federation)
+    - [Hierarchical federation](#hierarchical-federation)
+    - [Cross-service federation](#cross-service-federation)
+    - [Configuration](#configuration)
+
+<!-- /TOC -->
 
 ## Prometheus High-availability
 

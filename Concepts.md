@@ -1,25 +1,35 @@
-
 # Concepts
+<!-- TOC -->
 
-**_Data Model_**
+- [Concepts](#concepts)
+  - [Data Model](#data-model)
+  - [Metric type](#metric-type)
+    - [Counter](#counter)
+    - [Gauge](#gauge)
+    - [Histogram :](#histogram-)
+    - [Summary](#summary)
+  - [Job và Instance](#job-và-instance)
 
-Prometheus về cơ bản lưu trữ tất cả dữ liệu theo time series.
-Time series là sự kết hợp của name metric và các cặp key-value được gọi là labels. Kết hợp của các lables cho cùng một name metric khởi tạo nên một dimension cụ thể cho metric đó . Label bắt đầu bằng _ được dành riêng cho sử dụng nội bộ.
+<!-- /TOC -->
+
+## [Data Model](https://prometheus.io/docs/concepts/data_model/)
 
 ![ ](https://image.slidesharecdn.com/copyofprometheusstorage1-160127133731/95/prometheus-storage-4-638.jpg?cb=1453901940)
 
-*_Metric names and labels_*
+Prometheus về cơ bản lưu trữ tất cả dữ liệu theo cấu trúc cơ sở dữ liệu chuỗi thời gian (TSDB). Cơ sở dữ liệu chuỗi thời gian (TSDB) là cơ sở dữ liệu được tối ưu hóa cho dữ liệu được đánh dấu thời gian hoặc chuỗi thời gian, dữ liệu chuỗi thời gian chỉ đơn giản là các phép đo hoặc sự kiện được theo dõi, giám sát, lấy mẫu và tổng hợp theo thời gian. Cơ sở dữ liệu chuỗi thời gian có một mô hình dữ liệu rất cụ thể để cho phép nó hoạt động hiệu quả bao gồm các thành phần sau:
 
-- Name metric: chỉ ra đặc tính chung của hệ thống cần đo . Ví dụ:  `http_requests_total`  => tổng số HTTP request nhận được.
+**Metric name**: Chỉ ra đặc tính chung của số liệu hệ thống cần đo. Ví dụ: http_requests_total → tổng số yêu cầu HTTP nhận được.
 
-- PromQL sẽ dựa trên dimension để lọc và tổng hợp dữ liệu. Ví dụ: với metric  `http_requests_total`, chúng ta có thể có 2 label là  `method="POST"`,  `status="200"`
+**Label**: Là các cặp khóa (key) - giá trị (value) kết hợp với tên số liệu xác định cho chuỗi thời gian trong Prometheus.
+  
+Ví dụ: http_requests_total{service="users-directory",instance="1.2.3.4"} → số liệu có 2 nhãn : service="users-directory" và instance="1.2.3.4"
+    - Khóa: có thể bao gồm: chữ, số hay dấu gạch dưới “_”.
+    - Giá trị: Có thể chứa bất kỳ ký tự Unicode nào.
+    - Thay đổi bất kỳ giá trị của nhãn nào, bao gồm thêm hoặc xóa nhãn, sẽ tạo ra chuỗi thời gian mới.
 
-*_Sample_*
-
-Các samples hình thành lên time series thực tế ,mỗi sample bao gồm :
-
-- một  giá trị float64
-- một timestamp chính xác đến mili giây.(1/1/1970 UTC)
+**Sample**: Các mẫu hình thành lên chuỗi thời gian thực tế, mỗi mẫu bao gồm:
+    - Một giá trị thực 64 bit (float64)
+    - Một mẫu thời gian chính xác đến mili giây.
 
 *_Notation_*
 
@@ -27,37 +37,40 @@ Các samples hình thành lên time series thực tế ,mỗi sample bao gồm :
 <metric name>{<label name>=<label value>, ...}
 ```
 
-**_Metric type_**
+## [Metric type](https://prometheus.io/docs/concepts/metric_types/)
 
-Prometheus hỗ trợ 4 metric type là:
+Các thông tin về các đối tượng mà các Exporter thu được trước khi được xuất ra để Prometheus thu thập đều được tổng hợp thành một trong bốn kiểu số liệu phù hợp mà Prometheus hỗ trợ.
 
-1. Counter :
- Metric tích lũy đại diện cho một bộ đếm chỉ có thể tăng dần hoặc được đặt lại về 0 khi khởi động lại. Ví dụ: bạn có thể sử dụng bộ đếm để thể hiện số lượng yêu cầu được phục vụ, nhiệm vụ đã hoàn thành hoặc lỗi.
-Không sử dụng bộ đếm với giá trị có thể giảm. Ví dụ: không sử dụng bộ đếm cho số lượng quy trình hiện đang chạy nên sử dụng Gauge.
+### Counter
 
-2. Gauge :
-Metric đại diện cho một giá trị số có thể tùy ý lên xuống, thường được sử dụng cho các giá trị đo như nhiệt độ hoặc mức sử dụng bộ nhớ hiện tại, và "counter" có thể tăng và giảm, như số lượng yêu cầu đồng thời.
+Counter là số liệu tích lũy đại diện cho một bộ đếm chỉ có thể tăng dần hoặc được đặt lại về 0 khi khởi động lại. Counter được sử dụng để ghi lại giá trị chỉ tăng ví dụ như số lượng yêu cầu HTTP được gửi đi đến địa chỉ của một dịch vụ web hay bản tin lỗi gửi đến một interface của thiết bị router,…
 
-3. Histogram :
+### Gauge
 
-    Loại số liệu biểu đồ đo tần số của các quan sát giá trị rơi vào các buckets cụ thể.
-    Ví dụ: Ta có thể đo thời lượng yêu cầu cho một yêu cầu HTTP cụ thể bằng biểu đồ. Thay vì lưu trữ mọi thời lượng cho mỗi yêu cầu, Prometheus sẽ thực hiện xấp xỉ bằng cách lưu trữ tần suất của các yêu cầu rơi vào các bucket cụ thể.
-    Bucket : là counter của các quan sát. Nó nên có giới hạn trên và giới hạn dưới.
+Gauge là số liệu đại diện cho một giá trị số có thể tùy ý lên xuống, là "counter" có thể tăng và giảm, thường được sử dụng cho các giá trị đo như nhiệt độ hoặc mức sử dụng bộ nhớ hiện tại.
+
+Ví dụ: Bạn có thể sử dụng bộ đếm để thể hiện số lượng yêu cầu đã hoàn thành hoặc lỗi. Không sử dụng bộ đếm với giá trị có thể giảm như số lượng quy trình hiện đang chạy mà nên sử dụng Gauge.
+
+### Histogram :
+
+Histogram là kết hợp của nhiều counter bao gồm các counter đo tần số của quan sát giá trị rơi vào các nhóm cụ thể, counter đếm tổng số quan sát và counter là tổng giá trị của các quan sát đó. Ví dụ có thể đo thời lượng yêu cầu cho một yêu cầu HTTP cụ thể bằng Histogram thay vì lưu trữ mọi thời lượng cho mỗi yêu cầu, Prometheus sẽ thực hiện xấp xỉ bằng cách lưu trữ tần suất của các yêu cầu rơi vào các bucket cụ thể. Bucket là counter của các quan sát. Nó nên có giới hạn trên và giới hạn dưới.
 
 - `<basename> _bucket {le = "< upper includesive bound >"}` : bộ đếm tích lũy cho các bucket quan sát .
 - `<basename> _sum`: tổng cộng của tất cả các giá trị được quan sát.
-- `<basename> _count` : số lượng các sự kiện đã được quan sát .( = `<basename>_bucket{le="+Inf"}`)
+- `<basename> _count` : số lượng các sự kiện đã được quan sát .(= `<basename>_bucket{le="+Inf"}`)
 
-    Các trường hợp sử dụng Historgram:
+![](images/histogram.png)
+
+Histogram về độ trễ của các bản tin yêu cầu theo giây, bao gồm 4 counter đầu tiên là thống kê độ trễ của các bản yêu cầu lần lượt có 4 yêu cầu có độ trễ nhỏ hơn hoặc bằng (le) 0.025 giây, 7 yêu cầu có độ trễ nhỏ hơn 0.05 giây, 10 yêu cầu có độ trễ nhỏ hơn 1 giây, counter biểu diễn yêu cầu có độ trễ nhỏ hơn “+Inf” (dương vô cùng) hay được hiểu rằng có 11 độ trễ của yêu cầu được quan sát bằng với giá trị của số liệu “request_latency_seconds_count” và số liệu cuối cùng là tổng số thời gian trễ 3.3 giây của 11 yêu cầu được quan sát.
+
+Các trường hợp sử dụng Historgram:
 - Khi muốn thực hiện nhiều phép đo của một đối tượng, để sau đó tính trung bình hoặc phần trăm .
 - Khi không bận tâm về các giá trị chính xác,có thể sử dụng giá trị xấp xỉ .
 - Khi biết phạm vi của các giá trị
 
-    Một số trường hợp sử dụng :
-- Thời hạn yêu cầu
-- Kích thước phản hồi
+Ví dụ: Thời hạn yêu cầu, Kích thước phản hồi,...
 
- Sử dụng hàm histogram_quantile () để tính toán lượng tử từ biểu đồ hoặc thậm chí tổng hợp biểu đồ.
+Sử dụng hàm histogram_quantile () để tính toán lượng tử từ biểu đồ hoặc thậm chí tổng hợp biểu đồ.
 
 A Histogram looks like:
 
@@ -72,70 +85,43 @@ A Histogram looks like:
 
 ```
 
-1. Summary :
+### Summary
 
-    Một phần mở rộng của Histogram. Bên cạnh cũng cung cấp tổng và số lượng quan sát , nó tính toán các lượng tử có thể cấu hình qua sliding time window.
-
-    Một Summary hiển thị nhiều chuỗi thời gian trong một lần quét:
+Summary tương tự như Histogram, nó là kết hợp của một số counter và gauge. Summary lấy mẫu các quan sát (như thời lượng yêu cầu và kích thước phản hồi), mặc dù nó cũng cung cấp tổng số các quan sát và tổng của tất cả các giá trị quan sát, nhưng thay vì thống kê các giá trị rơi vào các nhóm như Histogram nó sẽ tính toán lượng tử (quantiles) có thể của các quan sát.
 
 - `<basename> {quantile = "<φ>"}`:  φ-quantiles (0 ≤ φ≤ 1) các sự kiện được quan sát.
 - `<basename> _sum`: tổng cộng của tất cả các giá trị được quan sát.
-- `<basename> _count`: số lượng các sự kiện đã được quan sát .
+- `<basename> _count`: số lượng các sự kiện đã được quan sát.
 
-    Các trường hợp sử dụng Summary cũng giống như Historgram .
+Các trường hợp sử dụng Summary cũng giống như Histogram.
 
-    A Summary looks like:
+A Summary looks like:
 
-    ```sh
-    go_gc_duration_seconds{quantile="0"} 0.000236554
-    go_gc_duration_seconds{quantile="0.25"} 0.000474629
-    go_gc_duration_seconds{quantile="0.5"} 0.0005691670000000001
-    go_gc_duration_seconds{quantile="0.75"} 0.000677597
-    go_gc_duration_seconds{quantile="1"} 0.002479919
-    go_gc_duration_seconds_sum 12.532527861
-    go_gc_duration_seconds_count 24279
-    ```
+```sh
+go_gc_duration_seconds{quantile="0"} 0.000236554
+go_gc_duration_seconds{quantile="0.25"} 0.000474629
+go_gc_duration_seconds{quantile="0.5"} 0.0005691670000000001
+go_gc_duration_seconds{quantile="0.75"} 0.000677597
+go_gc_duration_seconds{quantile="1"} 0.002479919
+go_gc_duration_seconds_sum 12.532527861
+go_gc_duration_seconds_count 24279
+```
 
-    Một số khác biệt giữa Summary và Historgram:
+**_Một số khác biệt giữa Summary và Historgram_**:
 
 - Với Historgram lượng tử được tính trên máy chủ Prometheus, với Summary chúng được tính trên máy chủ ứng dụng . Do đó, dữ liệu Summary không thể được tổng hợp từ một số trường hợp ứng dụng.
 - Historgram yêu cầu định nghĩa giá trị trước của bucket , vì vậy phù hợp với trường hợp sử dụng khi có ý tưởng tốt về sự tràn dải của các giá trị.
 - Summary là một lựa chọn tốt nếu cần tính toán các lượng tử chính xác, nhưng không thể chắc chắn phạm vi của các giá trị sẽ là bao nhiêu.
 
-**_Job và Instance_**
+## [Job và Instance](https://prometheus.io/docs/concepts/jobs_instances/)
 
 - Instance: một endpoint mà Prometheus có thể thu thập dữ liệu metrics, tương ứng với một single process.
 - Job: tập hợp các instance có chung mục đích.
 
-_Ví dụ:_
+Ví dụ:
 
 - job:  `api-server`
   - instance 1:  `1.2.3.4:5670`
   - instance 2:  `1.2.3.4:5671`
   - instance 3:  `5.6.7.8:5670`
   - instance 4:  `5.6.7.8:5671`
-
-# Architecture
-
-![ ](https://prometheus.io/assets/architecture.png)
-
-Prometheus là một hệ sinh thái gồm nhiều thành phần:
-
-- Prometheus server : thu thập và lưu trữ dữ liệu dưới dạng time series.
-- Client libraries : đây là API tương tác với Prometheus của các ngôn ngữ lập trình khác như Go, Java/Scala, Ruby, Python, ...
-- Push Gateway: hỗ trợ các job có thời gian sống ngắn. Các tác vụ công việc này không đủ lâu để Prometheus chủ động lấy dữ liệu vì vậy các metric sẽ được đẩy về PushGateway rồi đẩy về Prometheus Server.
-- Các exporter  như HAProxy, StatsD, Graphite, ... : hỗ trợ giám sát các dịch vụ hệ thống và gửi về Prometheus .
-- Alertmanager : xử lý cảnh báo.
-- Các công cụ hỗ trợ khác .
-
--> Prometheus thực hiện lấy các metric từ các job được chỉ định qua kênh trực tiếp hoặc thông qua dịch vụ Gateway chung . Sau đó Promethus sẽ lưu trữ các dữ liệu thu thấp được ở local máy chủ. Tiếp đến sẽ chạy các rules để xử lý dữ liệu theo nhu cầu cũng như kiểm tra thực hiện các cảnh báo mà bạn mong muốn .
-
-## When does it fit
-
-Prometheus hoạt động tốt để ghi lại bất kỳ chuỗi thời gian hoàn toàn bằng số. Nó phù hợp với cả giám sát tập trung vào máy cũng như giám sát các kiến trúc hướng dịch vụ rất năng động. Trong một thế giới của microservice, sự hỗ trợ của nó cho việc thu thập và truy vấn dữ liệu đa chiều là một thế mạnh đặc biệt.
-
-Prometheus được thiết kế để đảm bảo độ tin cậy, là hệ thống bạn sử dụng trong thời gian ngừng hoạt động để cho phép bạn chẩn đoán nhanh các sự cố. Mỗi máy chủ Prometheus là độc lập, không phụ thuộc vào lưu trữ mạng hoặc các dịch vụ từ xa khác. Bạn có thể dựa vào nó khi các phần khác trong cơ sở hạ tầng của bạn bị hỏng và bạn không cần thiết lập cơ sở hạ tầng mở rộng để sử dụng nó.
-
-## When does it not fit
-
-Prometheus values reliability. Bạn luôn có thể xem những số liệu thống kê có sẵn về hệ thống của bạn, ngay cả trong điều kiện thất bại. Nếu bạn cần độ chính xác 100%, chẳng hạn như thanh toán theo yêu cầu, Prometheus không phải là một lựa chọn tốt vì dữ liệu được thu thập có thể sẽ không được chi tiết và đầy đủ. Trong trường hợp như vậy, tốt nhất bạn nên sử dụng một số hệ thống khác để thu thập và phân tích dữ liệu để thanh toán và Prometheus cho phần còn lại của việc theo dõi của bạn.

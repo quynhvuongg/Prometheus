@@ -1,4 +1,14 @@
 ﻿# Service discovery (SD)
+<!-- TOC -->
+
+- [Service discovery (SD)](#service-discovery-sd)
+  - [Why do we need Service discovery](#why-do-we-need-service-discovery)
+  - [Basic service discoveries](#basic-service-discoveries)
+    - [File](#file)
+    - [Consul](#consul)
+    - [OpenStack](#openstack)
+
+<!-- /TOC -->
 
 ![ ](https://o.quizlet.com/8vqZtNfDtb4wz1cdMJiqKA.png)
 

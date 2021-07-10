@@ -1,4 +1,15 @@
 ﻿# Configuration
+<!-- TOC -->
+
+- [Configuration](#configuration)
+  - [Configuration file](#configuration-file)
+  - [Recording rules](#recording-rules)
+  - [Alerting rules](#alerting-rules)
+  - [Templates](#templates)
+
+<!-- /TOC -->
+
+## [Configuration file](https://prometheus.io/docs/prometheus/latest/configuration/configuration/)
 
 Prometheus được cấu hình thông qua command-line flags và configure file:
 
@@ -23,7 +34,6 @@ scrape_configs:
   - job_name:  'prometheus'  
     static_configs:
          - targets: ['localhost:9090']
-
 ```
 
 ```yml
@@ -32,12 +42,11 @@ scrape_configs:
        - "--config.file=/etc/prometheus/prometheus.yml"  
        # chỉ định configure file vào đường dẫn
 ```
-
----
+Đọc thêm về các tham số cấu hình [tại đây](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#configuration-file).
 
 Prometheus hỗ trợ 2 kiểu rules : Recording rule và Alerting rule. Các statement được chứa trong tệp YAML `rule_files` và được Prometheus load  vào.
 
-## Recording rules
+## [Recording rules](https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/)
 
 Cho phép ta tính toán trước các biểu thức cần thiết hoặc tính toán đắt tiền và lưu kết quả của chúng dưới dạng một time series mới.
 
@@ -54,8 +63,6 @@ groups:
 
       # biểu thức tính metric
       expr: 100 - (100 * node_memory_MemFree_bytes / node_memory_MemTotal_bytes)
-
-
 ```
 
 Check rules sử dụng promtool:
@@ -68,7 +75,7 @@ rule_files:
 - "rule_files"
 ```
 
-## Alerting rules
+## [Alerting rules](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/)
 
 Cho phép ta xác định các điều kiện cảnh báo dựa trên biểu thức Prometheus và gửi thông báo kích hoạt cảnh báo tới dịch vụ bên ngoài.
 
@@ -125,7 +132,7 @@ rule_files:
 
 Các alert rules của Prometheus rất tốt trong việc tìm ra những gì bị hỏng thời điểm đó, nhưng chúng không phải là một giải pháp thông báo chính thức. Để thêm tóm tắt, giới hạn tốc độ thông báo, im lặng và cảnh báo phụ thuộc vào các định nghĩa cảnh báo đơn giản do Alertmanager đảm nhận vai trò này.
 
-## Templates
+## [Templates](https://prometheus.io/docs/prometheus/latest/configuration/template_examples/)
 
 Prometheus hỗ trợ tạo khuôn mẫu trong các annotations và labels của cảnh báo, cũng như trong các trang điều khiển được phục vụ.
 Templates có khả năng chạy các truy vấn đối với cơ sở dữ liệu cục bộ, lặp dữ liệu, sử dụng các điều kiện, định dạng dữ liệu, v.v.
@@ -144,7 +151,7 @@ annotations:
   description: "{{$labels.instance}} of job {{$labels.job}} has been down for more than 5 minutes."
 ```
 
-Các mẫu cảnh báo sẽ được thực thi trong mỗi lần lặp cảnh báo kích hoạt  , vì vậy nên giữ mọi query và template nhẹ. Nếu bạn cần mẫu phức tạp hơn để cảnh báo, bạn nên liên kết với bảng điều khiển thay thế.
+Các mẫu cảnh báo sẽ được thực thi trong mỗi lần lặp cảnh báo kích hoạt , vì vậy nên giữ mọi query và template nhẹ. Nếu bạn cần mẫu phức tạp hơn để cảnh báo, bạn nên liên kết với bảng điều khiển thay thế.
 
 **_Simple iteration_**
 

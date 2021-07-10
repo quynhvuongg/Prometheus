@@ -1,5 +1,14 @@
 ﻿# Alertmanager
 
+<!-- TOC -->
+
+- [Alertmanager](#alertmanager)
+  - [Notification Pipeline](#notification-pipeline)
+  - [Configuration](#configuration)
+  - [Practices](#practices)
+
+<!-- /TOC -->
+
 Alertmanager nhận tất cả các cảnh báo từ máy chủ Prometheus và chuyển đổi chúng thành các thông báo như emails, messages và pages.
 
 ![ ](https://www.oreilly.com/library/view/prometheus-up/9781492034131/assets/prur_1801.png)
@@ -10,47 +19,35 @@ Alertmanager làm nhiều việc cho ta hơn là chỉ chuyển đổi luôn c�
 
 ![ ](https://user-images.githubusercontent.com/2590559/40104670-cf36c10a-58a5-11e8-909f-133837dd57ac.png)
 
-**_Grouping_**
-  
-Nhóm các cảnh báo rất hữu ích khi nhiều hệ thống bị lỗi cùng một lúc và hàng trăm đến hàng nghìn cảnh báo có thể được kích hoạt đồng thời.
+**Grouping**
 
-Ví dụ: Ta cấu hình 100 servers ,khi bị failed thì sẽ gửi cảnh báo đến sysadmin. Khi đó, sysadmin sẽ lập tức nhận 100 notifications một lúc. Thay vì vậy, ta gom nhóm 100 servers này vào 1 group, và sysadmin sẽ chỉ nhận được 1 notification mà thôi. Notification này sẽ chứa đầy đủ thông báo của 100 servers này.
+Nhóm các cảnh báo có cùng một số đặc điểm chung ví dụ như tên cảnh báo hoặc một nhãn nào đó thành một thông báo chung rồi gửi đến quản trị viên. Điều này rất hữu ích khi nhiều hệ thống bị lỗi cùng một lúc và hàng trăm đến hàng nghìn cảnh báo có thể được kích hoạt đồng thời.
 
-```sh
-group_by: ['alertname', 'cluster', 'service']
+**Inhibition**
 
-```
+Ngăn cản một số cảnh báo thành thông báo khi có một cảnh báo khác có nhãn mức nghiêm trọng hơn đang được kích hoạt.
 
-Nhóm các cảnh báo, thời gian cho các thông báo được nhóm và receivers nhận các thông báo đó được cấu hình bởi route tree trong tệp cấu hình.
+**Silence**
 
-**_Inhibition_**
+Cho phép bỏ qua một số cảnh báo nhất định trong một thời gian, tắt cảnh báo được cấu hình trong giao diện web Alertmanager.
 
-Ngăn cản một số cảnh báo thành thông báo khi có một cảnh báo khác nghiêm trọng hơn đang được kích hoạt .
+**Routing**
 
-**_Silences_**
+Alertmanager sẽ không chuyển tất cả thông báo đến cùng một nơi, mà nó cho phép cấu hình cây định tuyến (routing tree) để xác định điểm cần đến cho thông báo. Nếu thông báo match (trùng) với đường nào trong routing tree dựa trên nhãn của cảnh báo thì sẽ được gửi đi theo đường đó. Còn không match nào, nó sẽ được gửi theo đường đi mặc định được cấu hình.
 
-Cho phép bỏ qua một số cảnh báo nhất định trong một thời gian. Silences được cấu hình trong giao diện web Alertmanager.
+**Deduplication**
 
-**_Routing_**
+Alertmanager sẽ điều tiết thông báo cho một nhóm nhất định để bạn không bị nhận các thư rác (spam) bởi các thông báo giống nhau bằng cách sao chép dữ liệu, loại bỏ những bản sao lặp lại.
 
-Alertmanager sẽ không chuyển tất cả thông báo đến cùng một nơi, mà nó cho phép cấu hình routing tree để xác định điểm cần đến cho thông báo .
-Nếu notification trùng với match của route nào đó, thì sẽ được gửi đi theo đường đó. Còn không match với route nào, nó sẽ được gửi theo đường đi mặc định.
+**Retry**
 
-**_Deduplication_**
+Trong điều kiện lý tưởng các thông báo được xử lý kịp thời, tuy nhiên thực tế có thể có những ảnh hưởng đến hệ thống mà bị lạc mất. Do đó Alertmanager sẽ lặp lại thông báo sau một khoảng thời gian kể từ lần gửi thông báo trước để chúng không bị lạc quá lâu. Việc gửi lại thông báo còn có ý nghĩa trong trường hợp quản trị quá bận rộn không thấy được thông báo đầu hoặc thời gian xử lý quá lâu, thông báo gửi lại như một phần để nhắc nhở.
 
-Alertmanager sẽ điều tiết thông báo cho một nhóm nhất định để bạn không bị spam bởi các thông báo giống nhau bằng cách sao chép dữ liệu, loại bỏ những bản sao lặp lại.
-
-**_Retry_**
-
-Trong điều kiện lý tưởng các thông báo được xử lý kịp thời, tuy nhiên thực tế có thể có những ảnh hưởng đến hệ thống mà bị lạc mất. Do đó Alertmanager sẽ lặp lại thông báo để chúng không bị lạc quá lâu.
-
-**_Receiver_**
+**Receiver**
 
 Cấu hình thông tin các nơi nhận. Ví dụ như tên đăng nhập, mật khẩu,...
-
-**_Notification_**
-
-Cuối cùng chúng đến giai đoạn được gửi đi dưới dạng thông báo qua receiver. Thông báo được tạo theo khuôn mẫu, cho phép tùy chỉnh nội dung của chúng và nhấn mạnh các chi tiết quan trọng .
+Thiết lập thông báo
+Cuối cùng chúng đến giai đoạn được gửi đi dưới dạng thông báo đến nơi nhận. Thông báo được tạo theo khuôn mẫu, cho phép tùy chỉnh nội dung của chúng và nhấn mạnh các chi tiết quan trọng.
 
 ## Configuration
 
@@ -176,8 +173,8 @@ route:
 
 - group_by: Prometheus sẽ gom những thông báo có cùng `alertname` vào 1 thông báo.
 - group_wait: Sau khi một cảnh báo được taọ ra. Phải đợi khoảng thời gian này thì cảnh báo mới được gửi đi.
-- group_interval: Sau khi cảnh báo đầu tiên gửi đi, phải đợi khoảng thời gian này thì các cảnh báo sau mới được gửi đi.
-- repeat_interval: Sau khi cảnh báo được gửi đi thành công. Sau khoảng thời gian này, nếu vấn đề vẫn còn tồn tại, Prometheus sẽ tiếp tục gửi đi cảnh báo sau khoảng thời gian này.
+- group_interval: Sau khi thông báo gồm các cảnh báo đầu tiên gửi đi, phải đợi khoảng thời gian này thì nhóm các cảnh báo sau cùng `alertname` được gửi đi.
+- repeat_interval: Sau khi cảnh báo được gửi đi thành công. Sau khoảng thời gian này, nếu vấn đề vẫn còn tồn tại, Prometheus sẽ tiếp tục gửi đi cảnh báo sau khoảng thời gian này với điều kiện nhóm gồm các cảnh báo ko thay đổi.
 
 NOTE:
 
@@ -268,10 +265,12 @@ Với nhãn "warning" thông báo được gửi tới Gmail
 ![ ](https://github.com/quynhvuongg/Picture/blob/master/noti3.png?raw=true)
 
 1 Service bị down
+
 ![ ](https://github.com/quynhvuongg/Picture/blob/master/noti4.png?raw=true)
 
- Alert 2: Service down với nhãn "critical"
- ![ ](https://github.com/quynhvuongg/Picture/blob/master/noti6.png?raw=true)
+Alert 2: Service down với nhãn "critical"
+
+![ ](https://github.com/quynhvuongg/Picture/blob/master/noti6.png?raw=true)
 
 Cảnh báo được đưa đến Alermanager xử lý
 

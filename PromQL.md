@@ -1,14 +1,29 @@
-﻿# PromQL
+﻿# [PromQL](https://prometheus.io/docs/prometheus/latest/querying/basics/)
+<!-- TOC -->
 
-Prometheus cung cấp một ngôn ngữ truy vấn gọi là PromQL (Prometheus Query Language) cho phép người dùng chọn và tổng hợp dữ liệu time series theo thời gian thực.
-Kết quả của một biểu thức có thể được hiển thị dưới dạng biểu đồ, dữ liệu dạng bảng trong trình duyệt biểu thức của Prometheus hoặc được sử dụng bởi các hệ thống bên ngoài thông qua API HTTP.
+- [PromQL](#promql)
+  - [Expression language data types](#expression-language-data-types)
+  - [Literals](#literals)
+    - [String literals](#string-literals)
+    - [Float literals](#float-literals)
+    - [Time series Selector](#time-series-selector)
+    - [Subquery](#subquery)
+  - [Operators](#operators)
+    - [Binary operators](#binary-operators)
+    - [Vector matching](#vector-matching)
+    - [Aggregation operators](#aggregation-operators)
+    - [Binary operator precedence](#binary-operator-precedence)
+  - [Functions](#functions)
+
+<!-- /TOC -->
+Prometheus cung cấp một ngôn ngữ truy vấn gọi là PromQL (Prometheus Query Language) cho phép người dùng chọn và tổng hợp dữ liệu time series theo thời gian thực.Kết quả của một biểu thức có thể được hiển thị dưới dạng biểu đồ, dữ liệu dạng bảng trong trình duyệt biểu thức của Prometheus hoặc được sử dụng bởi các hệ thống bên ngoài thông qua API HTTP. Bên cạnh đó PromQL còn được biểu diễn thành các biểu thức trong các quy tắc cảnh báo để đánh giá số liệu mà Prometheus thu thập được, hình thành cảnh báo của Prometheus.
 
 ## Expression language data types
 
 - Instant vector: một set time series chứa một mẫu cho mỗi time series, tất cả đều chia sẻ cùng timestamp .
 - Range vector: một set time series chứa một phạm vi các điểm dữ liệu theo thời gian cho mỗi time series .
 - Scalar (vô hướng): một giá trị số thực đơn giản
-- String: một chuỗi đơn giản ( hiện tại không dùng )
+- String: một chuỗi đơn giản (hiện tại không dùng)
 
 ## Literals
 
@@ -130,11 +145,11 @@ min_over_time( rate(http_requests_total[5m])[30m:1m] )
 - `rate (http_quests_total [5m])` được thực hiện từ `start=<now> -30m` đến `end=<now>`, với độ chia 1m.  
 - Cuối cùng, kết quả của tất cả các đánh giá ở trên được chuyển đến `min_over_time ()`.
 
-## Operators
+## [Operators](https://prometheus.io/docs/prometheus/latest/querying/operators/)
 
 ### Binary operators
 
- PromQL hỗ trợ các toán tử logic và số học cơ bản .
+PromQL hỗ trợ các toán tử logic và số học cơ bản .
 
 **_Arithmetic binary operators_**
   
@@ -178,7 +193,7 @@ So sánh :
 
 `vector1 unless vector2`: Kết quả là một vectơ bao gồm các phần tử của vectơ 1 mà không có phần tử nào trong vectơ 2.
 
-## Vector matching
+### Vector matching
 
 **_One-to-one vector matches_**
 
@@ -252,7 +267,7 @@ Example result :
 
 ```
 
-## Aggregation operators
+### Aggregation operators
 
 Prometheus hỗ trợ các toán tử  tích hợp được sử dụng để tổng hợp các phần tử của một instant vector, cho kết quả một vector mới có ít phần tử hơn với các giá trị tổng hợp:
 
@@ -313,7 +328,7 @@ topk(5, http_requests_total)
 
 ```
 
-## Binary operator precedence
+### Binary operator precedence
 
 1. `^`
 2. `*`, `/`, `%`
@@ -324,7 +339,7 @@ topk(5, http_requests_total)
 
 ---
 
-## FUNCTIONS
+## [Functions](https://prometheus.io/docs/prometheus/latest/querying/functions/)
 
 - `abs(v instant-vector)`: trả về giá trị tuyệt đối
 
